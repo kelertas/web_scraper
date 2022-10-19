@@ -1,0 +1,74 @@
+[tool.poetry]
+name = "web scraper"
+version = "0.0.1"
+description = "Simple web scraper using beuatifulsoup4 and ML"
+authors = ["Edgaras Kelertas <edgaras.kelertas@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "3.10.*"
+numpy = "1.23.4"
+pandas = "1.5.0"
+matplotlib = "3.6.1"
+scikit-learn = "1.1.2"
+beautifulsoup4 = "4.11.1"
+fastai = "2.7.9"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+black = "22.10.0"
+flake8 = "5.0.4"
+pre-commit = "2.20.0"
+pytest = "7.1.3"
+safety = "2.3.1"
+mypy = "0.982"
+bandit = "1.7.4"
+isort = "5.10.1"
+jupyterlab = "3.4.8"
+
+[tool.flake8]
+exclude = '''
+/(
+  \.git
+ |\.hg
+ |\.eggs
+ |\.mypy_cache
+ |\.tox
+ |\.venv
+ |\.vscode
+ |_build
+ |buck-out
+ |build
+ |dist
+ |condaenv
+)/
+'''
+max_line_length = 99
+max-complexity = 18
+
+[tool.black]
+line-length = 99
+preview = true
+include = '/project$|\.pyi?$'
+exclude = '''
+/(
+  \.git
+ |\.hg
+ |\.eggs
+ |\.mypy_cache
+ |\.tox
+ |\.venv
+ |\.vscode
+ |_build
+ |buck-out
+ |build
+ |dist
+ |condaenv
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 99
