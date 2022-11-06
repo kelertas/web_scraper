@@ -7,13 +7,14 @@ from src.scrapers.base import BaseScraper
 
 class Min15(BaseScraper):
     __items_per_page__: int = 20
-    __domain__: str = "https://www.15min.lt/maistas/receptai/"
+    __domain__: str = "https://www.15min.lt/maistas"
+    
     
     def _retrieve_items_list(self, pages_count: int, keyword: str) -> List[RecipeLink]:
         results: List[RecipeLink] = []
         
-        for page_num in range(2, pages_count + 2):
-                content = self._get_page_content(f"paieska?f%5Bphrase%5D={keyword}&f%5Bingredients%5D%5B%5D=&f%5Bingredients%5D%5B%5D=&f%5Bingredients%5D%5B%5D=&f%5Bingredients%5D%5B%5D=&f%5Bingredients%5D%5B%5D=&f%5Bingredients%5D%5B%5D=&f%5Bingredients%5D%5B%5D=&f%5Bingredients%5D%5B%5D=&f%5Bingredients%5D%5B%5D=&f%5Bduration%5D=&s={page_num}")
+        for page_num in range(1, pages_count + 1):
+                content = self._get_page_content(f"receptai/paieska?f%5Bphrase%5D={keyword}&s=1&psl={page_num}")
                 if content:
                     recipe_items = content.find("div", class_="recipe-list col-18").find("div", class_="list").find_all("div", class_="list-row")
                     for recipe_item in recipe_items:
@@ -22,6 +23,7 @@ class Min15(BaseScraper):
                 else:
                     continue
         return results
+    
     
     def _extract_ingredients(self, content: BeautifulSoup) -> str:
         ingredients_list = content.find("div", class_="text").find("ul", class_="ingredients").find_all("li")
@@ -36,13 +38,16 @@ class Min15(BaseScraper):
     
     def _extract_making_steps(self, content: BeautifulSoup) -> str:
         making_steps: List[str] = []
-        making_steps_lis = content.find("div", class_="text").find("div", class_="description_text").find("ol").find_all("li")
-        for making_steps_li in making_steps_lis:
-            making_steps.append(making_steps_li.text)
+        making_steps_ps = content.find("div", class_="description text").find_all("p")
+        for making_steps_p in making_steps_ps:
+            making_steps.append(making_steps_p.text)
         return ", ". join(making_steps)
     
+    
     def _retrieve_recipe_info(self, link: RecipeLink) -> Optional[Recipe]:
-        content = self._get_page_content(link.url)
+        link_url = "receptas/" + link.url[38:]
+        content = self._get_page_content(link_url)
+        
         if content:
             try:
                 recipe_title = content.find("div", class_= "recipe-head").find("h1").text
@@ -52,10 +57,15 @@ class Min15(BaseScraper):
             making_time = content.find("div", class_="top-actions").find("span", class_="recipe-duration fl").find("span", class_="duration").find("time").text
             main_recipe_image = content.find("div", class_="image col-18").find("div", class_="badge-layers-holder").find("span").find("img")["src"]
             
+            #if content.find("div", id ="news-item").find("h4", class_="intro").find("span").find("p"):
+            #    about_text = content.find("div", id ="news-item").find("h4", class_="intro").find("span").find("p").text
+            #else:
+            about_text = ""
+                
             return Recipe(
-                title=recipe_title,
+                title=recipe_title.strip(),
                 image_url=main_recipe_image,
-                about="",
+                about=about_text,
                 making_time=making_time,
                 ingredients=self._extract_ingredients(content),
                 making_steps=self._extract_making_steps(content)
