@@ -24,6 +24,7 @@ class BaseScraper(ABC):
 
     def _get_page_content(self, query: str) -> Optional[BeautifulSoup]:
         resp = requests.get(f"{self.__domain__}/{query}")
+        print(f"{self.__domain__}/{query}")
         if resp.status_code == 200:
             return BeautifulSoup(resp.content, "html.parser")
         raise Exception("Cannot reach content!")

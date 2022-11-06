@@ -4,3 +4,4 @@
 dist
 webscraper.egg-info
 __pycache__/
+localhost.session.sql
