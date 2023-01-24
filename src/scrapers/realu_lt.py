@@ -105,20 +105,18 @@ class Realu_Lt(BaseScraper):
 
         description = ""
         if len(accordion_body_class) == 2:
-            description_ps = accordion_body_class[1].find_all("p")         
+            description_ps = accordion_body_class[1].find_all("p")
             for p in description_ps:
                 description += p.text + " "
-
 
         imgs = content.find("div", class_="swiper-wrapper").find_all("img")
         for img in imgs:
             links_to_img_list.append(img["src"])
         links_to_img = ",".join(links_to_img_list)
 
-
         div_meta = content.find("div", class_="meta")
         data_grid = div_meta.find_all("div", class_="dl")
-        
+
         if len(data_grid) == 3:
             area_field: str = data_grid[0].find("span", class_="dd").text.split(" ")
             area = area_field[0]
@@ -128,37 +126,33 @@ class Realu_Lt(BaseScraper):
                 floors = floor_field[1]
             elif len(floor_field) == 1:
                 floor = floor_field[0]
-                floors = "0"    
+                floors = "0"
             number_of_rooms: str = data_grid[2].find("span", class_="dd").text
-        
+
         elif len(data_grid) == 2:
             area_field: str = data_grid[0].find("span", class_="dd").text.split(" ")
             area = area_field[0]
             floor = "0"
             floors = "0"
             number_of_rooms: str = data_grid[1].find("span", class_="dd").text
-            
+
         elif len(data_grid) == 1:
             area_field: str = data_grid[0].find("span", class_="dd").text.split(" ")
-            area = area_field[0]        
+            area = area_field[0]
             floor = "0"
             floors = "0"
             number_of_rooms = "0"
         else:
-            area = "0"        
+            area = "0"
             floor = "0"
             floors = "0"
             number_of_rooms = "0"
-                
-        
 
         price_per_square_m_field: str = content.find("span", class_="area").text.split()
         price_per_square_m = "".join(price_per_square_m_field[:-1])
 
         total_price_field: str = content.find("span", class_="price").text.split()
         total_price = "".join(total_price_field[:-1])
-
-        
 
         flat: Flat = Flat(
             city=city,

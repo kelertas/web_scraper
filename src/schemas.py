@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Optional
 
 
-
 class FlatBase(BaseModel):
     city: str
     street: str

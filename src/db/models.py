@@ -30,7 +30,7 @@ class FlatScraped(Base):
 
 class FlatForPrediction(Base):
     __tablename__: str = "predicted_flats"
-    
+
     id = Column(Integer, primary_key=True, nullable=False)
     city = Column(String, nullable=True)
     street = Column(String, nullable=True)

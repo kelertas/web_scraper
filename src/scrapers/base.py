@@ -38,5 +38,5 @@ class BaseScraper(ABC):
             scraped_flat = self._retrieve_flat_info(flat_link)
             if scraped_flat:
                 scraped_flats.append(scraped_flat)
-        
+
         return scraped_flats
