@@ -1,50 +1,42 @@
 import math
-
-#Infrastructure for defining abstract base class
-from abc import ABC, abstractmethod
-
-from decimal import DivisionByZero
-from typing import List, Dict, Optional
-
 import requests
+import lxml
 from bs4 import BeautifulSoup
-
-#Progress bar package
+from abc import ABC, abstractmethod
+from typing import List, Optional
 from tqdm import tqdm
+from src.models.flat import Flat, FlatUrl
 
-from src.models.recipe import Recipe, RecipeLink
 
 class BaseScraper(ABC):
     __items_per_page__: int = 0
     __domain__: str = ""
-    
+
     @abstractmethod
-    def _retrieve_items_list(self, pages_count: int, keyword: str) -> List[RecipeLink]:
+    def _retrieve_flat_links(self, pages_count: int, keyword: str) -> List[FlatUrl]:
         pass
 
     def _get_page_content(self, query: str) -> Optional[BeautifulSoup]:
         resp = requests.get(f"{self.__domain__}/{query}")
-        print(f"{self.__domain__}/{query}")
         if resp.status_code == 200:
-            return BeautifulSoup(resp.content, "html.parser")
-        raise Exception("Cannot reach content!")
-    
+            return BeautifulSoup(resp.content, "lxml")
+        raise Exception("Cannot reach the content")
+
     @abstractmethod
-    def _retrieve_recipe_info(self, link: RecipeLink) -> Optional[Recipe]:
+    def _retrieve_flat_info(self, link: FlatUrl) -> Optional[Flat]:
         pass
-    
-    def scrape(self, recipes_count: int, keyword: str) -> List[Optional[Recipe]]:
+
+    def scrape(self, flats_count: int, keyword: str) -> List[Optional[Flat]]:
         try:
-            pages_count = math.ceil(recipes_count / self.__items_per_page__)
+            pages_count = math.ceil(flats_count / self.__items_per_page__)
         except ZeroDivisionError:
-            raise AttributeError("Recipes per page is set to 0!")
-        recipe_links = self._retrieve_items_list(pages_count, keyword)
-        scraped_recipes: List[Optional[Recipe]] = []
-        for recipe_link in tqdm(recipe_links):
-            scraped_recipe = self._retrieve_recipe_info(recipe_link)
-            if scraped_recipe:
-                scraped_recipes.append(scraped_recipe)
-        return scraped_recipes
-    
-    
+            raise AttributeError("Flats per page is set to zero")
+
+        flat_links = self._retrieve_flat_links(pages_count, keyword)
+        scraped_flats: List[Optional[Flat]] = []
+        for flat_link in tqdm(flat_links):
+            scraped_flat = self._retrieve_flat_info(flat_link)
+            if scraped_flat:
+                scraped_flats.append(scraped_flat)
         
+        return scraped_flats
