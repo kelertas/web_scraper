@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "web scraper"
 version = "0.0.1"
-description = "Simple web scraper using beuatifulsoup4 and ML"
+description = "A web scraper using beuatifulsoup4, PostgreSQL and FastAPI"
 authors = ["Edgaras Kelertas <edgaras.kelertas@gmail.com>"]
 
 [tool.poetry.dependencies]
@@ -15,8 +15,13 @@ fastai = "2.7.9"
 pydantic = "^1.10.2"
 requests = "^2.28.1"
 types-requests = "^2.28.11.2"
-mysql-connector-python = "^8.0.31"
 fastapi = "^0.86.0"
+sqlalchemy = "^1.4.46"
+tqdm = "^4.64.1"
+lxml = "^4.9.2"
+python-dotenv = "^0.21.0"
+uvicorn = {extras = ["standard"], version = "^0.20.0"}
+psycopg2 = "^2.9.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

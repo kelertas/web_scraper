@@ -1,3 +1,3 @@
-from src.scrapers.min15 import Min15
+#from src.scrapers.realu_lt import Realu_Lt
 
-SCRAPERS = {"min15": Min15}
+#SCRAPERS = {"realu_lt": Realu_Lt}
